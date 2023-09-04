@@ -6,6 +6,7 @@ turn_in_files=path/to/turn_in_files
 
 
 cd /tmp
+sort -o /tmp/ref $turn_in_files 
 if [ ! -d "launcher" ]; then
   mkdir launcher
 fi
@@ -17,12 +18,12 @@ if [ ! -d "intra" ]; then
   git clone $intra intra/
 fi
 cd github
-xargs -a $turn_in_files cp -t ../intra
+xargs -a /tmp/ref cp -t ../intra
 cd ..
 ls -1 intra/ > recebido
-diff $turn_in_files recebido
+diff /tmp/ref recebido
 cd intra
-xargs -a $turn_in_files git add
+xargs -a /tmp/ref git add
 git commit -m "automated"
 git push
 
@@ -35,8 +36,9 @@ if [ ! -d "intra" ]; then
   git clone $intra intra/
 fi
 ls -1 intra/ > recebido
-if [ ! $(diff $turn_in_files recebido) ]; then
+if [ ! $(diff /tmp/ref recebido) ]; then
   echo "Sucesso!"
   rm -rf /tmp/launcher/
   rm -rf /tmp/landing/
+  rm -rf /tmp/ref
 fi
